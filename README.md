@@ -24,8 +24,14 @@ aparece no app e vice-versa.
   perfil no primeiro acesso.
 - Feed global em tempo real (mesma query do app).
 - Publicar post com upload de imagem para o Firebase Storage.
-- Curtir posts (lógica idêntica à do app).
-- Página de perfil com grade de posts.
+- Curtir e **salvar** posts (lógica idêntica à do app).
+- **Comentar** em posts (ver e adicionar comentários).
+- **Seguir/deixar de seguir** com o modelo de solicitação/aceite do app, e
+  página de **solicitações** pendentes.
+- **Buscar** inatelinos por nome ou usuário.
+- Perfil próprio e de **outros usuários** (`/u/[username]`) com grade de posts.
+- **Editar perfil**: nome, bio, link e foto de perfil.
+- Navegação entre Feed, Buscar, Salvos, Solicitações e Perfil.
 
 ## Rodando localmente 🛠️
 
