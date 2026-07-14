@@ -34,6 +34,38 @@ export interface PostComment {
   likes_by_users?: string[];
 }
 
+// Story — documento em users/{email}/stories/{storyId}.
+export interface Story {
+  id: string;
+  imageUrl: string;
+  username: string;
+  name: string;
+  profile_picture: string;
+  owner_uid: string;
+  owner_email: string;
+  createdAt: Timestamp | null;
+  likes_by_users: string[];
+  new_likes: string[];
+  seen_by_users: string[];
+}
+
+// Contato de chat — documento em users/{email}/chat/{otherEmail}.
+export interface ChatContact {
+  email: string;
+  username: string;
+  name: string;
+  profile_picture: string;
+  status: "seen" | "unseen";
+}
+
+// Mensagem — documento em users/{email}/chat/{otherEmail}/messages/{id}.
+// who = "current" → enviada pelo dono da caixa; "user" → recebida.
+export interface ChatMessage {
+  message: string;
+  timestamp: Timestamp | null;
+  who: "current" | "user";
+}
+
 // Post — documento em users/{email}/posts/{postId}.
 export interface Post {
   id: string;

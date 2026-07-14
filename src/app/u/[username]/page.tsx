@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
   collection,
@@ -112,7 +113,17 @@ function UserProfileContent() {
             </a>
           ) : null}
         </div>
-        <FollowButton targetEmail={user.email} />
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          <FollowButton targetEmail={user.email} />
+          {me?.email !== user.email && (
+            <Link
+              href={`/messages/${encodeURIComponent(user.email)}`}
+              className="rounded-lg border border-neutral-700 px-4 py-1.5 text-sm font-semibold hover:bg-neutral-900"
+            >
+              Mensagem
+            </Link>
+          )}
+        </div>
       </section>
 
       <section className="mt-6 grid grid-cols-3 gap-1">

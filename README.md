@@ -31,7 +31,15 @@ aparece no app e vice-versa.
 - **Buscar** inatelinos por nome ou usuário.
 - Perfil próprio e de **outros usuários** (`/u/[username]`) com grade de posts.
 - **Editar perfil**: nome, bio, link e foto de perfil.
-- Navegação entre Feed, Buscar, Salvos, Solicitações e Perfil.
+- **Stories**: barra no topo do feed, publicar story (upload) e visualizador
+  em tela cheia com barras de progresso, auto-avanço e marcação de “visto”
+  (stories das últimas 24h).
+- **Chat/mensagens**: lista de conversas (`/messages`) e conversa em tempo
+  real (`/messages/[email]`), com contador de não lidas e botão “Mensagem”
+  no perfil.
+- **Notificações** (`/notifications`): curtidas e comentários nos seus posts
+  e solicitações para seguir, com badges de sino e mensagens na navegação.
+- Navegação entre Feed, Buscar, Salvos, Notificações, Mensagens e Perfil.
 
 ## Rodando localmente 🛠️
 

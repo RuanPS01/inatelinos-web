@@ -14,7 +14,17 @@ const NAV = [
 export function TopBar({ onNewPost }: { onNewPost?: () => void }) {
   const { profile, signOut } = useAuth();
   const pathname = usePathname();
-  const pendingRequests = profile?.followers_request?.length || 0;
+
+  // Sino agrega eventos (curtidas/comentários) + solicitações de follow.
+  const eventCount =
+    (profile?.event_notification || 0) +
+    (profile?.followers_request?.length || 0);
+  const chatCount = profile?.chat_notification || 0;
+
+  const badged = [
+    { href: "/notifications", label: "Notificações", icon: "🔔", count: eventCount },
+    { href: "/messages", label: "Mensagens", icon: "💬", count: chatCount },
+  ];
 
   return (
     <header className="sticky top-0 z-20 border-b border-neutral-800 bg-black/80 backdrop-blur">
@@ -40,20 +50,23 @@ export function TopBar({ onNewPost }: { onNewPost?: () => void }) {
             );
           })}
 
-          <Link
-            href="/requests"
-            title="Solicitações"
-            className={`relative rounded-lg px-2.5 py-1.5 text-lg transition ${
-              pathname === "/requests" ? "bg-neutral-800" : "hover:bg-neutral-900"
-            }`}
-          >
-            👥
-            {pendingRequests > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-inatel-500 px-1 text-[10px] font-bold text-white">
-                {pendingRequests}
-              </span>
-            )}
-          </Link>
+          {badged.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              title={item.label}
+              className={`relative rounded-lg px-2.5 py-1.5 text-lg transition ${
+                pathname === item.href ? "bg-neutral-800" : "hover:bg-neutral-900"
+              }`}
+            >
+              {item.icon}
+              {item.count > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-inatel-500 px-1 text-[10px] font-bold text-white">
+                  {item.count > 9 ? "9+" : item.count}
+                </span>
+              )}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
