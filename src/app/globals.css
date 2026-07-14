@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: #000;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Rolagem suave e reset de foco visível para acessibilidade */
+* {
+  outline-color: #4581c4;
+}
