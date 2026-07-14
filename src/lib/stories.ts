@@ -1,6 +1,7 @@
 // Ações de stories, espelhando o app mobile.
 import {
   addDoc,
+  arrayRemove,
   arrayUnion,
   collection,
   doc,
@@ -39,6 +40,16 @@ export async function markStorySeen(story: Story, viewerEmail: string) {
     doc(db, "users", story.owner_email, "stories", story.id),
     { seen_by_users: arrayUnion(viewerEmail) }
   );
+}
+
+// Curte/descurte um story (mesma lógica do handleStoryLike do app).
+export async function toggleStoryLike(story: Story, viewerEmail: string) {
+  const willLike = !story.likes_by_users?.includes(viewerEmail);
+  await updateDoc(doc(db, "users", story.owner_email, "stories", story.id), {
+    likes_by_users: willLike
+      ? arrayUnion(viewerEmail)
+      : arrayRemove(viewerEmail),
+  });
 }
 
 // Considera "ativo" um story das últimas 24h (comportamento de stories).

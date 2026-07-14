@@ -17,7 +17,12 @@ import StoryViewer from "./StoryViewer";
 export function StoriesBar() {
   const { profile } = useAuth();
   const [stories, setStories] = useState<Story[]>([]);
-  const [viewer, setViewer] = useState<number | null>(null);
+  // Grupos "congelados" no momento da abertura, para a ordenação não mudar
+  // enquanto o usuário navega (marcar visto reordena a lista ao vivo).
+  const [viewer, setViewer] = useState<{
+    groups: StoryGroup[];
+    index: number;
+  } | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
@@ -77,7 +82,9 @@ export function StoriesBar() {
         <div className="flex w-16 shrink-0 flex-col items-center gap-1">
           <button
             onClick={() =>
-              myGroupIndex >= 0 ? setViewer(myGroupIndex) : fileRef.current?.click()
+              myGroupIndex >= 0
+                ? setViewer({ groups, index: myGroupIndex })
+                : fileRef.current?.click()
             }
             className="relative"
           >
@@ -116,7 +123,7 @@ export function StoriesBar() {
           g.ownerEmail === profile.email ? null : (
             <button
               key={g.ownerEmail}
-              onClick={() => setViewer(index)}
+              onClick={() => setViewer({ groups, index })}
               className="flex w-16 shrink-0 flex-col items-center gap-1"
             >
               <StoryRing seen={g.allSeenBy(profile.email)}>
@@ -135,10 +142,10 @@ export function StoriesBar() {
         )}
       </div>
 
-      {viewer !== null && groups[viewer] && (
+      {viewer && (
         <StoryViewer
-          groups={groups}
-          initialGroup={viewer}
+          groups={viewer.groups}
+          initialGroup={viewer.index}
           onClose={() => setViewer(null)}
         />
       )}

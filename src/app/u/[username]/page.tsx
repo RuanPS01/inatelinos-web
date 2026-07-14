@@ -15,6 +15,7 @@ import { getUserByUsername } from "@/lib/social";
 import AppGate from "@/components/AppGate";
 import TopBar from "@/components/TopBar";
 import FollowButton from "@/components/FollowButton";
+import PostGrid from "@/components/PostGrid";
 import type { Post, UserProfile } from "@/lib/types";
 
 function UserProfileContent() {
@@ -126,16 +127,8 @@ function UserProfileContent() {
         </div>
       </section>
 
-      <section className="mt-6 grid grid-cols-3 gap-1">
-        {posts.map((post) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={post.id}
-            src={post.imageUrl}
-            alt={post.caption || "post"}
-            className="aspect-square w-full bg-neutral-900 object-cover"
-          />
-        ))}
+      <section className="mt-6">
+        <PostGrid posts={posts} />
       </section>
 
       {posts.length === 0 && (

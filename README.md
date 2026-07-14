@@ -86,8 +86,33 @@ src/
 | `npm run typecheck` | Checagem de tipos (tsc) |
 | `npm run lint` | ESLint (next lint) |
 
-## Deploy
+## Deploy 🚀
 
-O app pode ser publicado na **Vercel** (recomendado para Next.js) ou no
-**Firebase Hosting** (com framework hosting). Configure as mesmas variáveis
-`NEXT_PUBLIC_FIREBASE_*` como variáveis de ambiente no provedor escolhido.
+O repositório já vem com CI e deploy automático via GitHub Actions:
+
+- **CI** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): roda
+  typecheck, lint e build em cada push/PR.
+- **Deploy** ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)):
+  publica no **Firebase Hosting** (framework hosting para Next.js) ao dar
+  merge/push na branch `main`.
+
+### Secrets necessários (Settings → Secrets and variables → Actions)
+
+| Secret | Valor |
+|---|---|
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | do `firebaseConfig` (app Web) |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | idem |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | idem (também usado como `--project`) |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | idem |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | idem |
+| `NEXT_PUBLIC_FIREBASE_APP_ID` | idem |
+| `FIREBASE_SERVICE_ACCOUNT` | JSON de uma conta de serviço com papel **Firebase Hosting Admin** (ou Firebase Admin) |
+
+O primeiro deploy do framework hosting cria automaticamente uma Cloud
+Function/Cloud Run para o SSR do Next — pode exigir o plano **Blaze**. Ajuste
+o `.firebaserc` com o seu `projectId` (o workflow também passa `--project`).
+
+> **Alternativa — Vercel:** por ser Next.js, o deploy na Vercel é ainda mais
+> simples. Basta importar o repositório e definir as variáveis
+> `NEXT_PUBLIC_FIREBASE_*` no painel da Vercel; nesse caso, os workflows de
+> deploy do Firebase podem ser removidos.

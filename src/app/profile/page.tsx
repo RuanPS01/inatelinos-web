@@ -12,6 +12,7 @@ import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import AppGate from "@/components/AppGate";
 import TopBar from "@/components/TopBar";
+import PostGrid from "@/components/PostGrid";
 import type { Post } from "@/lib/types";
 
 function ProfileContent() {
@@ -84,16 +85,8 @@ function ProfileContent() {
         </Link>
       </section>
 
-      <section className="mt-6 grid grid-cols-3 gap-1">
-        {posts.map((post) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={post.id}
-            src={post.imageUrl}
-            alt={post.caption || "post"}
-            className="aspect-square w-full bg-neutral-900 object-cover"
-          />
-        ))}
+      <section className="mt-6">
+        <PostGrid posts={posts} />
       </section>
 
       {posts.length === 0 && (

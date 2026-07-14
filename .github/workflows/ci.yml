@@ -1,0 +1,38 @@
+name: CI
+
+# Verifica tipos, lint e build em cada push/PR (sem publicar).
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Checagem de tipos
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+        env:
+          # Valores de preenchimento só para o build passar no CI (o app é
+          # client-side; as credenciais reais entram no deploy/produção).
+          NEXT_PUBLIC_FIREBASE_API_KEY: ci-build
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ci-build

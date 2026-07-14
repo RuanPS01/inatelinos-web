@@ -24,5 +24,10 @@ yarn-error.log*
 .env
 .env*.local
 
+# Firebase
+.firebase/
+firebase-debug.log
+*service-account*.json
+
 # typescript
 *.tsbuildinfo
