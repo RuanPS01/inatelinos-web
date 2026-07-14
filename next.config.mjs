@@ -1,13 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Exporta o app como site estático (SPA). Todo o Firebase roda no
+  // navegador, então não há SSR a perder — e o resultado (pasta `out/`)
+  // roda no Firebase Hosting gratuito, no Render ou em qualquer host estático.
+  output: "export",
+  // URLs em estilo de diretório (/rota/), servidas de forma consistente por
+  // Firebase Hosting e Render.
+  trailingSlash: true,
   images: {
-    // Fotos de perfil e posts vêm do Firebase Storage e de geradores de avatar.
-    remotePatterns: [
-      { protocol: "https", hostname: "firebasestorage.googleapis.com" },
-      { protocol: "https", hostname: "ui-avatars.com" },
-      { protocol: "https", hostname: "randomuser.me" },
-    ],
+    // Sem servidor de otimização de imagens no export estático.
+    unoptimized: true,
   },
 };
 

@@ -6,6 +6,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { resetChatNotification } from "@/lib/chat";
+import { chatHref } from "@/lib/links";
 import AppGate from "@/components/AppGate";
 import TopBar from "@/components/TopBar";
 import type { ChatContact } from "@/lib/types";
@@ -45,7 +46,7 @@ function MessagesContent() {
           {contacts.map((c) => (
             <Link
               key={c.email}
-              href={`/messages/${encodeURIComponent(c.email)}`}
+              href={chatHref(c.email)}
               className="flex items-center gap-3 py-3"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}

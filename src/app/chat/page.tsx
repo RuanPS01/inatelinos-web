@@ -1,13 +1,14 @@
 "use client";
 
 import {
+  Suspense,
   useEffect,
   useRef,
   useState,
   type FormEvent,
 } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   collection,
   doc,
@@ -19,13 +20,14 @@ import {
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { markChatSeen, sendMessage } from "@/lib/chat";
+import { profileHref } from "@/lib/links";
 import AppGate from "@/components/AppGate";
 import { BrandMark } from "@/components/Brand";
 import type { ChatMessage, UserProfile } from "@/lib/types";
 
 function ConversationContent() {
-  const params = useParams<{ email: string }>();
-  const otherEmail = decodeURIComponent(params.email).toLowerCase();
+  const searchParams = useSearchParams();
+  const otherEmail = (searchParams.get("email") || "").toLowerCase();
   const { profile } = useAuth();
 
   const [other, setOther] = useState<UserProfile | null>(null);
@@ -36,6 +38,7 @@ function ConversationContent() {
 
   // Perfil do interlocutor (para o cabeçalho e o payload de envio).
   useEffect(() => {
+    if (!otherEmail) return;
     getDoc(doc(db, "users", otherEmail)).then((snap) => {
       if (snap.exists()) setOther(snap.data() as UserProfile);
     });
@@ -43,7 +46,7 @@ function ConversationContent() {
 
   // Mensagens da minha caixa com este usuário; marca como visto ao abrir.
   useEffect(() => {
-    if (!profile?.email) return;
+    if (!profile?.email || !otherEmail) return;
     markChatSeen(profile.email, otherEmail);
     const q = query(
       collection(db, "users", profile.email, "chat", otherEmail, "messages"),
@@ -80,7 +83,7 @@ function ConversationContent() {
           ‹
         </Link>
         {other && (
-          <Link href={`/u/${other.username}`} className="flex items-center gap-3">
+          <Link href={profileHref(other.username)} className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={other.profile_picture}
@@ -151,7 +154,9 @@ export default function ConversationPage() {
   return (
     <AppGate>
       <div className="min-h-screen bg-black">
-        <ConversationContent />
+        <Suspense fallback={null}>
+          <ConversationContent />
+        </Suspense>
       </div>
     </AppGate>
   );

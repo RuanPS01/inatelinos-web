@@ -88,15 +88,20 @@ src/
 
 ## Deploy 🚀
 
+O app é exportado como **site estático** (`output: "export"` → pasta `out/`).
+Como todo o Firebase roda no navegador, não há SSR — então roda em qualquer
+host estático, **incluindo o Firebase Hosting no plano gratuito (Spark)**.
+
 O repositório já vem com CI e deploy automático via GitHub Actions:
 
-- **CI** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): roda
-  typecheck, lint e build em cada push/PR.
+- **CI** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): typecheck,
+  lint e build em cada push/PR.
 - **Deploy** ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)):
-  publica no **Firebase Hosting** (framework hosting para Next.js) ao dar
-  merge/push na branch `main`.
+  build + publish no **Firebase Hosting** (estático) ao dar merge/push na `main`.
 
-### Secrets necessários (Settings → Secrets and variables → Actions)
+### Opção A — Firebase Hosting (grátis)
+
+Configure os secrets em *Settings → Secrets and variables → Actions*:
 
 | Secret | Valor |
 |---|---|
@@ -106,13 +111,26 @@ O repositório já vem com CI e deploy automático via GitHub Actions:
 | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | idem |
 | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | idem |
 | `NEXT_PUBLIC_FIREBASE_APP_ID` | idem |
-| `FIREBASE_SERVICE_ACCOUNT` | JSON de uma conta de serviço com papel **Firebase Hosting Admin** (ou Firebase Admin) |
+| `FIREBASE_SERVICE_ACCOUNT` | JSON de uma conta de serviço com papel **Firebase Hosting Admin** |
 
-O primeiro deploy do framework hosting cria automaticamente uma Cloud
-Function/Cloud Run para o SSR do Next — pode exigir o plano **Blaze**. Ajuste
-o `.firebaserc` com o seu `projectId` (o workflow também passa `--project`).
+Ajuste o `.firebaserc` com o seu `projectId`. Como é hosting **estático**, não
+há Cloud Functions/Cloud Run — funciona no plano gratuito.
 
-> **Alternativa — Vercel:** por ser Next.js, o deploy na Vercel é ainda mais
-> simples. Basta importar o repositório e definir as variáveis
-> `NEXT_PUBLIC_FIREBASE_*` no painel da Vercel; nesse caso, os workflows de
-> deploy do Firebase podem ser removidos.
+Deploy manual (local):
+
+```bash
+npm run build            # gera out/
+firebase deploy --only hosting --project SEU_PROJECT_ID
+```
+
+### Opção B — Render (grátis)
+
+O [`render.yaml`](render.yaml) define um **Static Site**. No Render:
+*New → Blueprint*, aponte para este repositório e preencha as variáveis
+`NEXT_PUBLIC_FIREBASE_*` no painel. Build: `npm ci && npm run build`;
+diretório publicado: `out`.
+
+> **Observação:** as rotas de perfil e conversa usam **query params**
+> (`/u?user=…`, `/chat?email=…`) justamente para o app funcionar como site
+> estático puro, sem servidor. A Vercel também funciona (importar o repo +
+> variáveis `NEXT_PUBLIC_FIREBASE_*`).

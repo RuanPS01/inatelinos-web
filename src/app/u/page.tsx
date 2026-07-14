@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   collection,
   onSnapshot,
@@ -12,6 +12,7 @@ import {
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { getUserByUsername } from "@/lib/social";
+import { chatHref } from "@/lib/links";
 import AppGate from "@/components/AppGate";
 import TopBar from "@/components/TopBar";
 import FollowButton from "@/components/FollowButton";
@@ -20,8 +21,8 @@ import type { Post, UserProfile } from "@/lib/types";
 
 function UserProfileContent() {
   const router = useRouter();
-  const params = useParams<{ username: string }>();
-  const username = params.username;
+  const searchParams = useSearchParams();
+  const username = searchParams.get("user") || "";
   const { profile: me } = useAuth();
 
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -34,6 +35,10 @@ function UserProfileContent() {
   }, [me?.username, username, router]);
 
   useEffect(() => {
+    if (!username) {
+      setStatus("notfound");
+      return;
+    }
     let active = true;
     getUserByUsername(username).then((u) => {
       if (!active) return;
@@ -68,7 +73,7 @@ function UserProfileContent() {
   if (status === "notfound" || !user) {
     return (
       <p className="py-16 text-center text-sm text-neutral-500">
-        Usuário @{username} não encontrado.
+        Usuário {username ? `@${username}` : ""} não encontrado.
       </p>
     );
   }
@@ -118,7 +123,7 @@ function UserProfileContent() {
           <FollowButton targetEmail={user.email} />
           {me?.email !== user.email && (
             <Link
-              href={`/messages/${encodeURIComponent(user.email)}`}
+              href={chatHref(user.email)}
               className="rounded-lg border border-neutral-700 px-4 py-1.5 text-sm font-semibold hover:bg-neutral-900"
             >
               Mensagem
@@ -145,7 +150,9 @@ export default function UserProfilePage() {
     <AppGate>
       <div className="min-h-screen bg-black">
         <TopBar />
-        <UserProfileContent />
+        <Suspense fallback={null}>
+          <UserProfileContent />
+        </Suspense>
       </div>
     </AppGate>
   );

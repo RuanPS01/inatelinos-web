@@ -14,6 +14,7 @@ import {
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { respondFollowRequest } from "@/lib/social";
+import { profileHref } from "@/lib/links";
 import AppGate from "@/components/AppGate";
 import TopBar from "@/components/TopBar";
 import UserRow from "@/components/UserRow";
@@ -171,7 +172,7 @@ function NotificationsContent() {
           <div className="divide-y divide-neutral-900">
             {interactions.map((it) => (
               <div key={it.key} className="flex items-center gap-3 py-3">
-                <Link href={`/u/${it.actor}`} className="shrink-0">
+                <Link href={profileHref(it.actor)} className="shrink-0">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={it.actorAvatar}
@@ -180,7 +181,7 @@ function NotificationsContent() {
                   />
                 </Link>
                 <p className="min-w-0 flex-1 text-sm">
-                  <Link href={`/u/${it.actor}`} className="font-semibold hover:underline">
+                  <Link href={profileHref(it.actor)} className="font-semibold hover:underline">
                     {it.actor}
                   </Link>{" "}
                   <span className="text-neutral-300">

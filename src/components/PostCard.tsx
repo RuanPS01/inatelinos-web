@@ -12,6 +12,7 @@ import {
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { toggleSave } from "@/lib/social";
+import { profileHref } from "@/lib/links";
 import timeAgo from "@/lib/timeAgo";
 import type { Post } from "@/lib/types";
 import CommentsModal from "./CommentsModal";
@@ -69,7 +70,7 @@ export function PostCard({ post }: { post: Post }) {
   return (
     <article className="border-b border-neutral-800 pb-4">
       <div className="flex items-center gap-3 px-1 py-3">
-        <Link href={`/u/${post.username}`}>
+        <Link href={profileHref(post.username)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={post.profile_picture}
@@ -77,7 +78,7 @@ export function PostCard({ post }: { post: Post }) {
             className="h-9 w-9 rounded-full border border-neutral-700 object-cover"
           />
         </Link>
-        <Link href={`/u/${post.username}`} className="text-sm font-semibold hover:underline">
+        <Link href={profileHref(post.username)} className="text-sm font-semibold hover:underline">
           {post.username}
         </Link>
         <span className="text-xs text-neutral-500">· {timeAgo(post.createdAt)}</span>
@@ -129,7 +130,7 @@ export function PostCard({ post }: { post: Post }) {
 
         {post.caption ? (
           <p className="mt-2 text-sm">
-            <Link href={`/u/${post.username}`} className="font-semibold hover:underline">
+            <Link href={profileHref(post.username)} className="font-semibold hover:underline">
               {post.username}
             </Link>{" "}
             {post.caption}

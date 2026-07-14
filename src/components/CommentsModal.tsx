@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { addComment } from "@/lib/social";
+import { profileHref } from "@/lib/links";
 import timeAgo from "@/lib/timeAgo";
 import type { Post } from "@/lib/types";
 
@@ -66,7 +67,7 @@ export function CommentsModal({
               />
               <div className="text-sm">
                 <Link
-                  href={`/u/${c.username}`}
+                  href={profileHref(c.username)}
                   className="font-semibold hover:underline"
                 >
                   {c.username}

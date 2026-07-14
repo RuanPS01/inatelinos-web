@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { profileHref } from "@/lib/links";
 import type { UserProfile } from "@/lib/types";
 
 // Linha de usuário reutilizada em busca, solicitações e listas.
@@ -14,7 +15,7 @@ export function UserRow({
 }) {
   return (
     <div className="flex items-center gap-3 py-2">
-      <Link href={`/u/${user.username}`} className="shrink-0">
+      <Link href={profileHref(user.username)} className="shrink-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={user.profile_picture}
@@ -22,7 +23,7 @@ export function UserRow({
           className="h-11 w-11 rounded-full border border-neutral-700 object-cover"
         />
       </Link>
-      <Link href={`/u/${user.username}`} className="min-w-0 flex-1">
+      <Link href={profileHref(user.username)} className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold">{user.username}</p>
         <p className="truncate text-sm text-neutral-400">{user.name}</p>
       </Link>

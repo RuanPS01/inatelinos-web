@@ -1,6 +1,8 @@
 name: Deploy web (Firebase Hosting)
 
-# Publica a web no Firebase Hosting ao dar merge/push na branch main.
+# Publica a web (site estático exportado) no Firebase Hosting ao dar
+# merge/push na branch main. Hosting estático funciona no plano gratuito
+# (Spark) — não requer Cloud Functions/Blaze.
 on:
   push:
     branches: [main]
@@ -22,7 +24,7 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
-      - name: Build
+      - name: Build (export estático → out/)
         run: npm run build
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
@@ -46,10 +48,3 @@ jobs:
         run: firebase deploy --only hosting --project "$FIREBASE_PROJECT_ID" --non-interactive
         env:
           FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
-          # As mesmas variáveis precisam existir no runtime do build do Hosting.
-          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
-          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
-          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
-          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
