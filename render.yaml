@@ -1,0 +1,26 @@
+# Deploy no Render como Static Site (plano gratuito).
+# Importe o repositório no Render (New → Blueprint) e defina os valores das
+# variáveis NEXT_PUBLIC_FIREBASE_* no painel (marcadas como sync: false).
+#
+# O export estático gera uma pasta por rota (out/<rota>/index.html), então o
+# Render serve cada rota diretamente — sem necessidade de rewrites.
+services:
+  - type: web
+    name: inatelinos-web
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./out
+    pullRequestPreviewsEnabled: true
+    envVars:
+      - key: NEXT_PUBLIC_FIREBASE_API_KEY
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_APP_ID
+        sync: false
